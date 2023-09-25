@@ -24,6 +24,16 @@
             <version>1.19.4-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>at.lav</groupId>
+            <artifactId>home-system-common</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>at.lav</groupId>
+            <artifactId>home-system-api</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
 
     <build>
