@@ -1,0 +1,8 @@
+name: SimpleHomeSystem
+version: '${project.version}'
+main: at.lav.simplehomeplugin.SimpleHomeSyste
+api-version: '1.19'
+load: STARTUP
+authors: [lav]
+description: Ein simples Home-System.
+website: https://apply.landania.dev/de/
