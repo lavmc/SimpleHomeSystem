@@ -22,9 +22,8 @@ public final class SimpleHomeSystem extends JavaPlugin {
             IHomeService homeService = new HomeServiceSpigot();
 
             this.getCommand("sethome").setExecutor(new SetHomeCommand(homeService));
-
-            getCommand("home").setExecutor(new HomeCommand());
-            getCommand("delhome").setExecutor(new DeleteHomeCommand());
+            this.getCommand("home").setExecutor(new HomeCommand(homeService));
+            this.getCommand("delhome").setExecutor(new DeleteHomeCommand(homeService));
 
         }catch (Exception e) {
             e.printStackTrace();

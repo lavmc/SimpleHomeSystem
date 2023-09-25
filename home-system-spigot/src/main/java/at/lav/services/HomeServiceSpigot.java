@@ -2,9 +2,14 @@ package at.lav.services;
 
 import at.lav.api.IHomeService;
 import at.lav.database.Database;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class HomeServiceSpigot implements IHomeService {
@@ -26,5 +31,80 @@ public class HomeServiceSpigot implements IHomeService {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    @Override
+    public boolean deleteHome(UUID playerUuid, String homeName) {
+        try {
+            PreparedStatement checkStmt = Database.getConnection().prepareStatement("SELECT 1 FROM homes WHERE player_uuid = ? AND home_name = ?");
+            checkStmt.setString(1, playerUuid.toString());
+            checkStmt.setString(2, homeName);
+
+            ResultSet rs = checkStmt.executeQuery();
+            if (!rs.next()) {
+                return false;
+            }
+
+            PreparedStatement deleteStmt = Database.getConnection().prepareStatement("DELETE FROM homes WHERE player_uuid = ? AND home_name = ?");
+            deleteStmt.setString(1, playerUuid.toString());
+            deleteStmt.setString(2, homeName);
+            deleteStmt.executeUpdate();
+            return true;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
+
+    @Override
+    public Location getHome(UUID playerUuid, String homeName) {
+        try {
+            PreparedStatement stmt = Database.getConnection().prepareStatement("SELECT x, y, z, world FROM homes WHERE player_uuid = ? AND home_name = ?");
+            stmt.setString(1, playerUuid.toString());
+            stmt.setString(2, homeName);
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                double x = rs.getDouble("x");
+                double y = rs.getDouble("y");
+                double z = rs.getDouble("z");
+                String worldName = rs.getString("world");
+                World world = Bukkit.getServer().getWorld(worldName);
+                if (world == null) {
+                    // rare case where world no longer exists?
+                    return null;
+                }
+                return new Location(world, x, y, z); // You'll need to get the actual World instance instead of null based on the 'world' string
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public List<Location> getAllHomes(UUID playerUuid, int page, int homesPerPage) {
+        List<Location> homes = new ArrayList<>();
+        int offset = (page - 1) * homesPerPage;
+
+        try {
+            PreparedStatement stmt = Database.getConnection().prepareStatement("SELECT x, y, z, world FROM homes WHERE player_uuid = ? LIMIT ? OFFSET ?");
+            stmt.setString(1, playerUuid.toString());
+            stmt.setInt(2, homesPerPage);
+            stmt.setInt(3, offset);
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                double x = rs.getDouble("x");
+                double y = rs.getDouble("y");
+                double z = rs.getDouble("z");
+                String world = rs.getString("world");
+                homes.add(new Location(null, x, y, z));
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return homes;
     }
 }
