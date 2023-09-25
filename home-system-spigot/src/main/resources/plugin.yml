@@ -1,8 +1,15 @@
 name: SimpleHomeSystem
 version: '${project.version}'
-main: at.lav.simplehomeplugin.SimpleHomeSyste
+main: at.lav.SimpleHomeSystem
 api-version: '1.19'
 load: STARTUP
 authors: [lav]
 description: Ein simples Home-System.
 website: https://apply.landania.dev/de/
+commands:
+  home:
+    description: Teleport to home.
+    usage: /home
+  sethome:
+    description: Set home location.
+    usage: /sethome
