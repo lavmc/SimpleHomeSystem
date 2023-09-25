@@ -7,11 +7,16 @@
     <groupId>at.lav</groupId>
     <artifactId>simplehomeplugin</artifactId>
     <version>1.0</version>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
 
     <name>SimpleHomeSystem</name>
 
     <description>Ein simples Home-System.</description>
+    <modules>
+        <module>home-system-api</module>
+        <module>home-system-common</module>
+        <module>home-system-spigot</module>
+    </modules>
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
