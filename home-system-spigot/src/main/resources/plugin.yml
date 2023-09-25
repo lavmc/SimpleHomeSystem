@@ -8,8 +8,14 @@ description: Ein simples Home-System.
 website: https://apply.landania.dev/de/
 commands:
   home:
+    permission: home.home
     description: Teleport to home.
     usage: /home
   sethome:
-    description: Set home location.
+    permission: home.sethome
+    description: Set home locations.
     usage: /sethome
+  delhome:
+    permission: home.delhome
+    description: Delete your home locations
+    usage: /delhome
