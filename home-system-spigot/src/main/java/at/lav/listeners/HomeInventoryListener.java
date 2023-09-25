@@ -48,7 +48,7 @@ public class HomeInventoryListener implements Listener {
                 if (clickedType == Material.RED_TERRACOTTA) {
                     homeService.deleteAllHomes(player.getUniqueId());
                     player.closeInventory();
-                    player.sendMessage(ChatColor.RED + "Alle Homes wurden gelöscht!");
+                    MessageUtils.sendPrefixedMessage(player,ChatColor.RED + "Alle Homes wurden gelöscht!");
                 }else if (clickedType == Material.PAPER) {
                     Location location = homeService.getHome(player.getUniqueId(), clickedName);
                     player.closeInventory();
@@ -66,8 +66,6 @@ public class HomeInventoryListener implements Listener {
                     } else {
                         MessageUtils.sendPrefixedMessage(player, ChatColor.RED + "Dieses Zuhause kann nicht gefunden werden!");
                     }
-
-                    player.sendMessage(ChatColor.GREEN + "Wilkommen bei "+clickedName);
                 } else if (clickedType == Material.ARROW && clickedName.equals("Nächste Seite")) {
                     currentPage++;
                     guiManager.openHomesGUI(player, currentPage);
