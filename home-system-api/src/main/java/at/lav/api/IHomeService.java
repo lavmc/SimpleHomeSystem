@@ -2,6 +2,8 @@ package at.lav.api;
 
 import java.util.List;
 import java.util.UUID;
+
+import at.lav.model.Home;
 import org.bukkit.Location;
 
 public interface IHomeService {
@@ -12,5 +14,7 @@ public interface IHomeService {
 
     Location getHome(UUID playerUuid, String homeName);
 
-    List<Location> getAllHomes(UUID playerUuid, int page, int homesPerPage);
+    List<Home> getAllHomes(UUID playerUuid, int page);
+
+    void deleteAllHomes(UUID uniqueId);
 }

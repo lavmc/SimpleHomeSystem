@@ -2,12 +2,14 @@ package at.lav.services;
 
 import at.lav.api.IHomeService;
 import at.lav.database.Database;
+import at.lav.model.Home;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -72,10 +74,9 @@ public class HomeServiceSpigot implements IHomeService {
                 String worldName = rs.getString("world");
                 World world = Bukkit.getServer().getWorld(worldName);
                 if (world == null) {
-                    // rare case where world no longer exists?
                     return null;
                 }
-                return new Location(world, x, y, z); // You'll need to get the actual World instance instead of null based on the 'world' string
+                return new Location(world, x, y, z);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -84,14 +85,14 @@ public class HomeServiceSpigot implements IHomeService {
     }
 
     @Override
-    public List<Location> getAllHomes(UUID playerUuid, int page, int homesPerPage) {
-        List<Location> homes = new ArrayList<>();
-        int offset = (page - 1) * homesPerPage;
+    public List<Home> getAllHomes(UUID playerUuid, int page) {
+        List<Home> homes = new ArrayList<>();
+        int offset = (page - 1) * 45;
 
         try {
-            PreparedStatement stmt = Database.getConnection().prepareStatement("SELECT x, y, z, world FROM homes WHERE player_uuid = ? LIMIT ? OFFSET ?");
+            PreparedStatement stmt = Database.getConnection().prepareStatement("SELECT x, y, z, world, home_name FROM homes WHERE player_uuid = ? LIMIT ? OFFSET ?");
             stmt.setString(1, playerUuid.toString());
-            stmt.setInt(2, homesPerPage);
+            stmt.setInt(2, 45);
             stmt.setInt(3, offset);
 
             ResultSet rs = stmt.executeQuery();
@@ -99,12 +100,30 @@ public class HomeServiceSpigot implements IHomeService {
                 double x = rs.getDouble("x");
                 double y = rs.getDouble("y");
                 double z = rs.getDouble("z");
-                String world = rs.getString("world");
-                homes.add(new Location(null, x, y, z));
+                String name = rs.getString("home_name");
+                String worldName = rs.getString("world");
+                World world = Bukkit.getServer().getWorld(worldName);
+                if (world == null) {
+                    return null;
+                }
+                homes.add(new Home(playerUuid, name, new Location(world, x, y, z)));
             }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
         return homes;
     }
+
+    @Override
+    public void deleteAllHomes(UUID playerUuid) {
+        try {
+            PreparedStatement stmt = Database.getConnection().prepareStatement("DELETE FROM homes WHERE player_uuid = ?");
+            stmt.setString(1, playerUuid.toString());
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+
 }

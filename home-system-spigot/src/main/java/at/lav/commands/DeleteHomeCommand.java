@@ -29,8 +29,6 @@ public class DeleteHomeCommand implements CommandExecutor {
         }
 
         if(homeService.deleteHome(player.getUniqueId(), args[0])) {
-
-            // Visuelle Effekte
             player.getWorld().spawnParticle(Particle.LAVA, player.getLocation(), 100, 0.5, 0.5, 0.5, 2);
             player.getWorld().spawnParticle(Particle.CLOUD, player.getLocation(), 100, 0.5, 0.5, 0.5, 2);
 

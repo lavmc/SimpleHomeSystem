@@ -1,22 +1,20 @@
 package at.lav.commands;
 
-import at.lav.SimpleHomeSystem;
 import at.lav.api.IHomeService;
 import at.lav.utils.MessageUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Particle;
-import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class HomeCommand implements CommandExecutor {
 
     private final IHomeService homeService;
+
 
     public HomeCommand(IHomeService homeService) {
         this.homeService = homeService;
@@ -34,17 +32,15 @@ public class HomeCommand implements CommandExecutor {
         Location location = homeService.getHome(player.getUniqueId(), args[0]);
 
         if(location != null) {
-            // Vor-Teleport Effekte
             player.getWorld().spawnParticle(Particle.EXPLOSION_HUGE, player.getLocation(), 3);
             player.getWorld().spawnParticle(Particle.ENCHANTMENT_TABLE, player.getLocation(), 200, 0.5, 0.5, 0.5, 2);
 
             player.teleport(location);
 
-            // Nach-Teleport Effekte
             player.getWorld().spawnParticle(Particle.DRAGON_BREATH, location, 100);
             player.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, location, 200, 0.5, 0.5, 0.5, 2);
 
-            MessageUtils.sendPrefixedMessage(player, ChatColor.GREEN + "Willkommen zuhause!");
+            MessageUtils.sendPrefixedMessage(player, ChatColor.GREEN + "Willkommen bei "+args[0]+"!");
         } else {
             MessageUtils.sendPrefixedMessage(player, ChatColor.RED + "Dieses Zuhause kann nicht gefunden werden!");
         }

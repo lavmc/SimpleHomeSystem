@@ -29,6 +29,11 @@
             <artifactId>json</artifactId>
             <version>20210307</version>
         </dependency>
+        <dependency>
+            <groupId>at.lav</groupId>
+            <artifactId>home-system-common</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
 
 </project>
